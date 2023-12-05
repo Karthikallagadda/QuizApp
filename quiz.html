@@ -1,0 +1,63 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="quiz.css">
+    <title>Quiz Page</title>
+</head>
+
+<body>
+    <div id="quiz-container">
+        <h1>Welcome to the Quiz!</h1>
+        <div id="question-container"></div>
+        <div id="options-container"></div>
+        <!-- <button onclick="submitAnswer()">Start Quiz</button> -->
+        <button id="start-button" onclick="startQuiz()">Start Quiz</button>
+         <button id="next-question-button" style="display: none;" onclick="loadNextQuestion()">Next Question</button>
+        <button id="previous-question-button" style="display: none;" onclick="loadPreviousQuestion()">Previous Question</button>
+        <button id="end-quiz-button" onclick="endQuiz()" style="display: none;">End Quiz</button>
+
+
+
+    </div>
+    <!-- Add this div to display the timer -->
+<div id="timer"></div>
+
+
+    <div id="score-container" style="display: none;">
+        <h2>Thank you for attending the Quiz</h2>
+        <h2>Your Score:</h2>
+        <p id="user-score"></p>
+    </div>
+
+    <button id="sign-out-button" onclick="signOut()">Sign Out</button>
+
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+    <script src="quiz.js"></script>
+
+    <script>
+        // Sample Quiz Data
+        const quizData = [
+            {
+                question: "1. What is the capital of France?",
+                options: ["Berlin", "Paris", "Madrid", "Rome"],
+                correctAnswer: "Paris"
+            },
+            // Add more questions here
+        ];
+
+        // Set the quizData in the quiz.js script
+        setQuizData(quizData);
+    </script>
+</body>
+
+</html>
+
+   
+
