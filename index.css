@@ -1,7 +1,5 @@
 
-
-
- body {
+body {
     width: 100%;
     height: 100%;
     background-color: #f0f0f0;
@@ -18,15 +16,19 @@
 }
 
 #form_container {
-    width: 500px; /* Increase the width */
-    height: 500px;
+    width: 90%;
+    max-width: 500px;
+    height: auto;
     background-color: #fff;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     overflow: hidden;
     text-align: center;
     padding: 20px;
+    margin: auto; /* Added margin: auto to horizontally center the container */
+    margin-top: 180px; /* Added margin-top for better spacing */
 }
+
 
 #form_header {
     font-size: 35px;
@@ -41,9 +43,9 @@
 
 #form_content_inner_container input {
     width: 100%;
-    height: 60px;
+    height: 50px; /* Adjusted height for input fields */
     padding: 8px;
-    margin-bottom: 20px;
+    margin-bottom: 15px; /* Adjusted margin for input fields */
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
     color: #333;
@@ -54,12 +56,12 @@
 
 #button_container {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column; /* Changed to column for better responsiveness */
 }
 
 #button_container button {
-    width: 48%;
-    height: 50px; /* Increase the height */
+    width: 100%;
+    height: 50px;
     background-color: #3498db;
     color: #fff;
     font-family: 'Montserrat', sans-serif;
@@ -73,4 +75,24 @@
 
 #button_container button:hover {
     background-color: #2980b9;
+}
+
+/* Media Queries for responsiveness */
+@media only screen and (min-width: 600px) {
+    #form_container {
+        width: 80%; /* Adjusted width for larger screens */
+    }
+
+    #form_content_inner_container input {
+        width: calc(100% - 16px); /* Adjusted width to accommodate padding */
+    }
+
+    #button_container {
+        flex-direction: row; /* Changed back to row for larger screens */
+    }
+
+    #button_container button {
+        width: 48%;
+        margin-right: 4%; /* Adjusted margin for button spacing */
+    }
 }

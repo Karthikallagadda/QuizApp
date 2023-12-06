@@ -468,7 +468,19 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
 const auth = app.auth();
-const database = app.database();
+const database = app.database();function setQuizData(quizData) {
+    // Code to dynamically create elements for questions based on quizData
+    // For example, using a loop to create <h1> elements for each question
+    quizData.forEach((questionObj, index) => {
+        const questionContainer = document.getElementById('question-container');
+        const questionElement = document.createElement('h2');
+        questionElement.textContent = `${index + 1}. ${questionObj.question}`;
+        questionContainer.appendChild(questionElement);
+    });
+    
+    
+}
+
 
 // Quiz Data
 const quizData = [
@@ -593,13 +605,13 @@ let userScore = 0;
 // ... (your existing code)
 
 // Set the initial timer value (in seconds)
-let timer = 5;
+let timer = 500;
 let timerInterval;
 
 // Function to reset the timer
 function resetTimer() {
     // Set the timer back to its initial value
-    timer = 5;
+    timer = 500;
 
     // Clear any existing timer interval
     clearInterval(timerInterval);
@@ -921,7 +933,7 @@ function loadNextQuestion() {
         document.getElementById("question-container").innerHTML = `<p>${currentQuestion.question}</p>`;
 
         // Display options
-        optionsContainer.innerHTML = "";
+        /* optionsContainer.innerHTML = "";
         currentQuestion.options.forEach((option, index) => {
             const optionInput = document.createElement("input");
             optionInput.type = "radio";
@@ -935,7 +947,22 @@ function loadNextQuestion() {
             optionsContainer.appendChild(optionInput);
             optionsContainer.appendChild(optionLabel);
             optionsContainer.appendChild(document.createElement("br"));
-        });
+        }); */
+        optionsContainer.innerHTML = "";
+    currentQuestion.options.forEach((option, index) => {
+        const optionInput = document.createElement("input");
+        optionInput.type = "radio";
+        optionInput.name = "answer";
+        optionInput.value = option;
+        optionInput.checked = currentQuestion.selectedAnswer === option; // Check if this option was previously selected
+
+        const optionLabel = document.createElement("label");
+        optionLabel.textContent = option;
+
+        optionsContainer.appendChild(optionInput);
+        optionsContainer.appendChild(optionLabel);
+        optionsContainer.appendChild(document.createElement("br"));
+    });
 
         // Display the "Next Question" button
         nextQuestionButton.style.display = "block";
@@ -1108,7 +1135,7 @@ function loadPreviousQuestion() {
         document.getElementById("question-container").innerHTML = `<p>${currentQuestion.question}</p>`;
 
         // Display options
-        optionsContainer.innerHTML = "";
+       /*  optionsContainer.innerHTML = "";
         currentQuestion.options.forEach((option, index) => {
             const optionInput = document.createElement("input");
             optionInput.type = "radio";
@@ -1123,6 +1150,21 @@ function loadPreviousQuestion() {
             optionsContainer.appendChild(optionInput);
             optionsContainer.appendChild(optionLabel);
             optionsContainer.appendChild(document.createElement("br"));
+        }); */
+        optionsContainer.innerHTML = "";
+        currentQuestion.options.forEach((option, index) => {
+            const optionInput = document.createElement("input");
+            optionInput.type = "radio";
+            optionInput.name = "answer";
+            optionInput.value = option;
+            optionInput.checked = currentQuestion.selectedAnswer === option; // Check if this option was previously selected
+    
+            const optionLabel = document.createElement("label");
+            optionLabel.textContent = option;
+    
+            optionsContainer.appendChild(optionInput);
+            optionsContainer.appendChild(optionLabel);
+            optionsContainer.appendChild(document.createElement("br"));
         });
     }
 
@@ -1132,7 +1174,7 @@ function loadPreviousQuestion() {
     }
 }
 
-// Function to save the selected answer
+/* // Function to save the selected answer
 function saveSelectedAnswer() {
     const selectedOption = document.querySelector('input[name="answer"]:checked');
     if (selectedOption) {
@@ -1146,7 +1188,47 @@ function saveSelectedAnswer() {
             userScore++;
         }
     }
-} 
+}  */
+/* function saveSelectedAnswer() {
+    const selectedOption = document.querySelector('input[name="answer"]:checked');
+    if (selectedOption) {
+        const currentQuestion = quizData[currentQuestionIndex];
+        currentQuestion.selectedAnswer = selectedOption.value;
+
+        // Check if the selected answer is correct and update the user's score
+        if (currentQuestion.selectedAnswer === currentQuestion.correctAnswer) {
+            userScore++;
+        }
+
+        // Log the current score
+        console.log("Current Score:", userScore);
+    }
+} */
+function saveSelectedAnswer() {
+    const selectedOption = document.querySelector('input[name="answer"]:checked');
+    if (selectedOption) {
+        const currentQuestion = quizData[currentQuestionIndex];
+
+        // Check if the selected answer is different from the previous one
+        if (currentQuestion.selectedAnswer !== selectedOption.value) {
+            const previousSelectedAnswer = currentQuestion.selectedAnswer;
+            currentQuestion.selectedAnswer = selectedOption.value;
+
+            // Calculate the score based on the selected answer
+            if (currentQuestion.selectedAnswer === currentQuestion.correctAnswer) {
+                userScore++;
+            } else if (previousSelectedAnswer === currentQuestion.correctAnswer) {
+                // Decrement the score if the previous answer was correct and now changed to a wrong one
+                userScore--;
+            }
+
+            // Log the current score
+            console.log("Current Score:", userScore);
+        }
+    }
+}
+
+
 
 
 
@@ -1171,6 +1253,11 @@ function displayScore() {
 
     // Display user's score
     userScoreElement.textContent = `Your Score: ${userScore}/${quizData.length}`;
+    retrieveHighestScore().then((highestScore) => {
+        const highestScoreElement = document.getElementById("highest-score-value");
+        highestScoreElement.textContent = highestScore || "N/A"; // Display "N/A" if no highest score
+        highestScoreElement.parentElement.style.display = "block"; // Display the highest score element
+    });
 
     // Save the user's score to Firebase or perform any other actions
     saveScoreToFirebase(userScore);
@@ -1622,7 +1709,7 @@ function displayScore() {
 
 
 // Function to save the score to Firebase
-function saveScoreToFirebase(score) {
+/* function saveScoreToFirebase(score) {
     const user = auth.currentUser;
     const databaseRef = database.ref();
 
@@ -1633,5 +1720,79 @@ function saveScoreToFirebase(score) {
     };
 
     databaseRef.child('users/' + user.uid + '/scores').push(userScoreData);
+} */
+
+/* // Function to save the score to Firebase
+function saveScoreToFirebase(score) {
+    const user = auth.currentUser;
+    const databaseRef = database.ref('users/' + user.uid);
+
+    // Save the score to the database
+    const userScoreData = {
+        score: score,
+        timestamp: Date.now()
+    };
+
+    databaseRef.child('scores').push(userScoreData);
+
+    // Update the highest score if the current score is higher
+    retrieveHighestScore().then((highestScore) => {
+        if (score > (highestScore || 0)) {
+            databaseRef.child('highestScore').set(score);
+        }
+    });
 }
+// Function to retrieve the highest score from Firebase
+function retrieveHighestScore() {
+    const user = auth.currentUser;
+    const databaseRef = database.ref('users/' + user.uid);
+
+    return databaseRef.child('highestScore').once('value').then((snapshot) => {
+        return snapshot.val();
+    });
+}
+ */
+function retrieveAllScores() {
+    const user = auth.currentUser;
+    const databaseRef = database.ref('users/' + user.uid + '/scores');
+
+    return databaseRef.once('value').then((snapshot) => {
+        return snapshot.val() || {}; // Return an empty object if there are no scores
+    });
+}
+
+// Function to retrieve the highest score from Firebase
+function retrieveHighestScore() {
+    return retrieveAllScores().then((scores) => {
+        // Extract scores values from the object
+        const scoreValues = Object.values(scores);
+
+        // Find the maximum score
+        const highestScore = Math.max(...scoreValues.map((score) => score.score));
+
+        return highestScore;
+    });
+}
+
+// Function to save the score to Firebase
+function saveScoreToFirebase(score) {
+    const user = auth.currentUser;
+    const databaseRef = database.ref('users/' + user.uid + '/scores');
+
+    // Save the score to the database
+    const userScoreData = {
+        score: score,
+        timestamp: Date.now()
+    };
+
+    databaseRef.push(userScoreData);
+
+    // Update the highest score immediately
+    retrieveHighestScore().then((currentHighestScore) => {
+        if (score > currentHighestScore) {
+            database.ref('users/' + user.uid).update({ highestScore: score });
+        }
+    });
+}
+
 

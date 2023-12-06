@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="quiz.css">
     <title>Quiz Page</title>
 </head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <body>
     <div id="quiz-container">
@@ -30,8 +31,10 @@
 
     <div id="score-container" style="display: none;">
         <h2>Thank you for attending the Quiz</h2>
-        <h2>Your Score:</h2>
+        <!-- <h2>Your Score:</h2> -->
         <p id="user-score"></p>
+        <!-- Add this to your HTML -->
+        <p id="highest-score" style="display: none;">Highest Score: <span id="highest-score-value"></span></p>
     </div>
 
     <button id="sign-out-button" onclick="signOut()">Sign Out</button>
@@ -41,6 +44,8 @@
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
     <script src="quiz.js"></script>
 
+    
+        
     <script>
         // Sample Quiz Data
         const quizData = [
@@ -55,6 +60,7 @@
         // Set the quizData in the quiz.js script
         setQuizData(quizData);
     </script>
+    </div>
 </body>
 
 </html>
